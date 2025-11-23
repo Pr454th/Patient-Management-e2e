@@ -1,0 +1,12 @@
+package com.pm.patient_service.dto;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class GeneralResponse<T> {
+    private String status;
+    private String message;
+    private T result;
+}

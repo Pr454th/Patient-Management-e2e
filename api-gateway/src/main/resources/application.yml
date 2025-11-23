@@ -1,0 +1,46 @@
+server:
+  port: 4003
+
+auth:
+  service:
+    url: http://localhost:4004
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service-route
+              uri: http://localhost:4004
+              predicates:
+                - Path=/auth/**
+              filters:
+                - StripPrefix=1
+
+            - id: patient-service-route
+              uri: http://localhost:4000
+              predicates:
+                - Path=/api/patients/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation # spring gateway will search for a class with JwtValidation+gatewayFilterFactory
+
+            - id: api-docs-patient-service-route
+              uri: http://localhost:4000
+              predicates:
+                - Path=/api-docs/patients
+              filters:
+                - RewritePath=/api-docs/patients,/v3/api-docs
+
+            - id: api-docs-patient-service-route
+              uri: http://localhost:4004
+              predicates:
+                - Path=/api-docs/auth
+              filters:
+                - RewritePath=/api-docs/auth,/v3/api-docs
+
+## REST CLIENT -> http://localhost:4003/api/patients/add
+## API GATEWAY -> http://localhost:4000/patients/add -> /api removed because of filters
