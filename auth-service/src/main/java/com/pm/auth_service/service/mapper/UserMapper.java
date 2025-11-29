@@ -20,7 +20,7 @@ public class UserMapper {
         return User.builder()
                 .email(requestDTO.getEmail())
                 .password(passwordEncoder.encode(requestDTO.getPassword()))
-                .role("GUEST")
+                .role(requestDTO.getRole())
                 .build();
     }
 

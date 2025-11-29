@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -38,5 +39,15 @@ public class UserService {
         newUser = userRepository.save(userMapper.toModel(userRequestDTO));
 
         return userMapper.toDTO(newUser);
+    }
+
+    public String getEmail(String doctorId) {
+        Optional<User> user=userRepository.findById(UUID.fromString(doctorId));
+
+        if(user.isPresent()){
+            return user.get().getEmail();
+        }
+
+        return "";
     }
 }

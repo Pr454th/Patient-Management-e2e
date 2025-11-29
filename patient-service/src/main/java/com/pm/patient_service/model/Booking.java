@@ -33,11 +33,11 @@ public class Booking {
     @NotNull
     private UUID slotId;
 
-    @NotBlank
+    @NotNull
     private LocalDate bookingDate;
 
     @NotBlank
-    private LocalDate slotFrame;
+    private String slotFrame;
 
     @Enumerated(EnumType.STRING)
     private Status status;

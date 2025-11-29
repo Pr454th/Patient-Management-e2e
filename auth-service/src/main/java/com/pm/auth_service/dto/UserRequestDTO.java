@@ -14,4 +14,6 @@ public class UserRequestDTO {
     @NotBlank(message = "Password is required")
     @Size(min=8, message = "Min size should be 8")
     private String password;
+
+    private String role;
 }

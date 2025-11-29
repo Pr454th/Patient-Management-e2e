@@ -14,18 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/operations")
 public class OperationController {
-
     @Autowired
     private OperationService operationService;
 
     @PostMapping(path = "/slot")
     public ResponseEntity<GeneralResponse> addSlot(@RequestBody SlotRequestDTO slotRequest){
-        boolean booked=operationService.addSlot(slotRequest);
+        boolean added=operationService.addSlot(slotRequest);
         GeneralResponse response=GeneralResponse.builder()
-                .status(booked?"SUCCESS":"FAILED")
-                .message(booked?"Booking Confirmed":"Booking failed!")
+                .status(added?"SUCCESS":"FAILED")
+                .message(added?"Slot Added successfully!":"Slot unsuccessful!")
                 .build();
         return ResponseEntity.ok(response);
     }
-
 }

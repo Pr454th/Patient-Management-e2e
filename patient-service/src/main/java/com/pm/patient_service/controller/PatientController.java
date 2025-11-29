@@ -75,8 +75,8 @@ public class PatientController {
     }
 
     @PostMapping(path = "/book")
-    public ResponseEntity<GeneralResponse> bookSlot(@RequestBody BookingRequestDTO bookingRequest){
-        boolean booked=operationService.addBooking(bookingRequest);
+    public ResponseEntity<GeneralResponse> bookSlot(@RequestHeader("Authorization") String token, @RequestBody BookingRequestDTO bookingRequest){
+        boolean booked=operationService.addBooking(bookingRequest, token);
         GeneralResponse response=GeneralResponse.builder()
                 .status(booked?"SUCCESS":"FAILED")
                 .message(booked?"Booking Confirmed":"Booking failed!")
