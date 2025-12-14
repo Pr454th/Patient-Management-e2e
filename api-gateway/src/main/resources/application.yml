@@ -3,7 +3,7 @@ server:
 
 auth:
   service:
-    url: http://localhost:4004
+    url: http://auth-service
 
 spring:
   application:
@@ -12,16 +12,20 @@ spring:
     gateway:
       server:
         webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
           routes:
             - id: auth-service-route
-              uri: http://localhost:4004
+              uri: lb://auth-service
               predicates:
                 - Path=/auth/**
               filters:
                 - StripPrefix=1
 
             - id: user-service-route
-              uri: http://localhost:4004
+              uri: lb://auth-service
               predicates:
                 - Path=/api/user/**
               filters:
@@ -49,6 +53,11 @@ spring:
                 - Path=/api-docs/auth
               filters:
                 - RewritePath=/api-docs/auth,/v3/api-docs
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8762/eureka/
 
 ## REST CLIENT -> http://localhost:4003/api/patients/add
 ## API GATEWAY -> http://localhost:4000/patients/add -> /api removed because of filters

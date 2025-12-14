@@ -34,4 +34,9 @@ public class DoctorController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping(path = "/test-name")
+    public ResponseEntity<String> getTestName(){
+        return ResponseEntity.ok("Doctor 1");
+    }
 }

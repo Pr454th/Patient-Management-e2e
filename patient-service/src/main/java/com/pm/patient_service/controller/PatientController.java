@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,9 @@ public class PatientController {
 
     @Autowired
     private OperationService operationService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @GetMapping
     @Operation(summary = "Get Patients")
@@ -75,12 +79,16 @@ public class PatientController {
     }
 
     @PostMapping(path = "/book")
-    public ResponseEntity<GeneralResponse> bookSlot(@RequestHeader("Authorization") String token, @RequestBody BookingRequestDTO bookingRequest){
-        boolean booked=operationService.addBooking(bookingRequest, token);
-        GeneralResponse response=GeneralResponse.builder()
-                .status(booked?"SUCCESS":"FAILED")
-                .message(booked?"Booking Confirmed":"Booking failed!")
-                .build();
+    public ResponseEntity<GeneralResponse> bookSlot(@RequestBody BookingRequestDTO bookingRequest){
+        GeneralResponse response=operationService.addBooking(bookingRequest);
         return ResponseEntity.ok(response);
+    }
+
+//    Eureka server test
+    @GetMapping(path = "/test-eureka")
+    public ResponseEntity<String> getDoctor(){
+        String name=restTemplate.getForObject("http://doctor-service/doctors/test-name", String.class);
+
+        return ResponseEntity.ok(name);
     }
 }

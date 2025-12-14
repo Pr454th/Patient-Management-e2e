@@ -7,11 +7,13 @@ import com.pm.patient_service.exception.EmailAlreadyExistsException;
 import com.pm.patient_service.exception.PatientNotFoundException;
 import com.pm.patient_service.grpc.BillingServiceGrpcClient;
 import com.pm.patient_service.kafka.KafkaProducer;
+import com.pm.patient_service.model.Booking;
 import com.pm.patient_service.model.Patient;
 import com.pm.patient_service.repository.PatientRepository;
 import com.pm.patient_service.service.mapper.PatientMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -73,4 +75,5 @@ public class PatientService {
         patientRepository.deleteById(id);
         return "Deleted!";
     }
+
 }

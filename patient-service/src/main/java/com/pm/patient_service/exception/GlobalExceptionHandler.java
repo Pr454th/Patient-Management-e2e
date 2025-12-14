@@ -46,4 +46,14 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @ExceptionHandler(GeneralException.class)
+    public ResponseEntity<GeneralResponse> handleGeneralException(GeneralException exception){
+        GeneralResponse response=GeneralResponse.builder()
+                .status("FAILED")
+                .message(exception.getMessage())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

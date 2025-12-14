@@ -1,19 +1,24 @@
 package com.pm.patient_service.service;
 
 import com.pm.patient_service.client.DoctorServiceClient;
+import com.pm.patient_service.contants.Constants;
 import com.pm.patient_service.dto.BookingRequestDTO;
+import com.pm.patient_service.dto.GeneralResponse;
 import com.pm.patient_service.dto.NotificationDTO;
 import com.pm.patient_service.dto.SlotRequestDTO;
+import com.pm.patient_service.exception.GeneralException;
 import com.pm.patient_service.kafka.KafkaProducer;
+import com.pm.patient_service.model.Booking;
 import com.pm.patient_service.model.Slot;
-import com.pm.patient_service.model.support.Status;
 import com.pm.patient_service.repository.BookingRepository;
 import com.pm.patient_service.repository.SlotRepository;
 import com.pm.patient_service.repository.projection.BookedSlotsProjection;
 import com.pm.patient_service.service.mapper.OperationMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,31 +43,31 @@ public class OperationService {
     @Autowired
     private DoctorServiceClient doctorServiceClient;
 
-    public boolean addBooking(BookingRequestDTO bookingRequest, String token) {
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public GeneralResponse addBooking(BookingRequestDTO bookingRequest) {
+        GeneralResponse response=null;
         try{
-            BookedSlotsProjection bookedSlots=repository.bookedSlots(bookingRequest.getDate());
-
-            if(bookedSlots==null) {
-                log.info("[ SLOT AVAILABLE ]");
-                Slot currentSlot=slotRepository.findById(UUID.fromString(bookingRequest.getSlotId())).get();
-                log.info("SLOT: {}", currentSlot.toString());
-                repository.save(operationMapper.toBookingModel(bookingRequest, currentSlot, Status.BOOKED));
-
-                kafkaProducer.sendBookingNotification(NotificationDTO.builder()
-                                .email(doctorServiceClient.getDoctorEmail(currentSlot.getDoctorId().toString(), token).toString())
-                                .subject("SLOT BOOKED")
-                                .content("Booking Date : "+bookingRequest.getDate().toString()+"\nSlot : "+currentSlot.getSlotFrame())
-                        .build());
-
-                return true;
-            }
-            return false;
+            response=restTemplate.postForObject(Constants.BOOKING_SERVICE+"/booking", bookingRequest, GeneralResponse.class);
+            return response;
         }
         catch(Exception e){
             log.info("[ EXCEPTION ]: {}", e.getMessage());
-            return false;
+            throw new GeneralException("Error while booking the slot, try again after some time");
         }
     }
+
+//    fixedRate -> fixed intervals won't wait for previous execution to finish might overlap
+//    fixedDelay -> jobs will run in serial manner
+//    initialDelay -> initial delay on start of the application
+//    @Scheduled(cron = "*/60 * * * * *")
+//    public void clearPastBookings(){
+//        List<Booking> bookings=repository.findAll();
+//        bookings.forEach(booking->{
+//            log.info("[ BK ]: {}", booking.getSlotFrame());
+//        });
+//    }
 
 //    This function should belong to doctor service
     public boolean addSlot(SlotRequestDTO slotRequest) {
