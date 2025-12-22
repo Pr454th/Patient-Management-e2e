@@ -31,9 +31,9 @@ public class AuthService {
         return token;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, String role) {
         try{
-            jwtUtil.validateToken(token);
+            jwtUtil.validateToken(token, role);
             return true;
         }
         catch(JwtException exception){

@@ -4,6 +4,7 @@ import com.pm.auth_service.dto.LoginRequestDTO;
 import com.pm.auth_service.dto.LoginResponseDTO;
 import com.pm.auth_service.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/")
+@Slf4j
 public class AuthController {
 
     @Autowired
@@ -35,8 +37,8 @@ public class AuthController {
     }
 
     @Operation(summary = "Validate Token")
-    @GetMapping("/validate")
-    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String authHeader){
+    @GetMapping("/validate/{role}")
+    public ResponseEntity<Void> validateToken(@PathVariable("role") String role, @RequestHeader("Authorization") String authHeader){
 
         // Authorization: Bearer <token>
 
@@ -44,7 +46,9 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return authService.validateToken(authHeader.substring(7))
+        log.info("[ VALIDATE ]");
+
+        return authService.validateToken(authHeader.substring(7), role)
                 ? ResponseEntity.status(HttpStatus.OK).build()
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

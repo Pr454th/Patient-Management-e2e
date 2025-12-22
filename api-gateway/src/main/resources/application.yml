@@ -1,5 +1,5 @@
 server:
-  port: 4003
+  port: 9000
 
 auth:
   service:
@@ -36,6 +36,14 @@ spring:
               uri: http://localhost:4000
               predicates:
                 - Path=/api/patients/**
+              filters:
+                - StripPrefix=1
+                - JwtValidation # spring gateway will search for a class with JwtValidation+gatewayFilterFactory
+
+            - id: doctor-service-route
+              uri: lb://doctor-service
+              predicates:
+                - Path=/api/doctors/**
               filters:
                 - StripPrefix=1
                 - JwtValidation # spring gateway will search for a class with JwtValidation+gatewayFilterFactory

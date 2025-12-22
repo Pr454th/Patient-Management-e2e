@@ -38,8 +38,12 @@ public class JwtValidationGatewayFilterFactory extends AbstractGatewayFilterFact
 //                return chain.filter(exchange);
 //            }
 
+            String role=(path.contains("patients"))?"PATIENT":"DOCTOR";
+
             String token=exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-            String uri=authServiceUrl+"/validate";
+            String uri=String.format(authServiceUrl+"/validate/%s", role);
+
+            log.info("[ URI ]: {}", uri);
 
             if(token==null || !token.startsWith("Bearer ")){
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
