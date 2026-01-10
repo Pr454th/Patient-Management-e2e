@@ -9,7 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-server" />
       </profile>
-      <profile name="Annotation profile for booking-service" enabled="true">
+      <profile name="Annotation profile for payment-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -18,12 +18,21 @@
         </processorPath>
         <module name="auth-service" />
         <module name="payment-service" />
-        <module name="booking-service" />
         <module name="doctor-service" />
+        <module name="booking-service" />
         <module name="api-gateway" />
         <module name="analytics-service" />
         <module name="patient-service" />
         <module name="billing-service" />
+      </profile>
+      <profile name="Annotation profile for chat-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="chat-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -34,6 +43,7 @@
       <module name="auth-service" options="-parameters" />
       <module name="billing-service" options="-parameters" />
       <module name="booking-service" options="-parameters" />
+      <module name="chat-service" options="-parameters" />
       <module name="doctor-service" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="patient-service" options="-parameters" />
