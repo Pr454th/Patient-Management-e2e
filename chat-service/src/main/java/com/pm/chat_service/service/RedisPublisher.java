@@ -21,6 +21,6 @@ public class RedisPublisher {
     public void publish(String chatId, String message) throws JsonProcessingException {
         ChatMessage chatMessage=mapper.readValue(message, ChatMessage.class);
         log.info("[ PUBLISH ]: {} {}", String.format("chat-%s", chatId), chatMessage.toString());
-        redisTemplate.convertAndSend("chat-"+ "red", message);
+        redisTemplate.convertAndSend("chat-"+ chatId, message);
     }
 }

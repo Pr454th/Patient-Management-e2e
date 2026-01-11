@@ -22,6 +22,7 @@ public class ChatController {
 
     @PostMapping(path = "/create")
     public ResponseEntity<String> createChat(@RequestBody ChatCreateRequestDTO requestDTO){
+        log.info("[ REQ BODY ]: {}", requestDTO.toString());
         String response=service.createChat(requestDTO);
         return ResponseEntity.ok(response);
     }

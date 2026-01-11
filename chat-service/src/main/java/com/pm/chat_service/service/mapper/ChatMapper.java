@@ -11,7 +11,8 @@ import java.util.UUID;
 public class ChatMapper {
     public Chat toModel(ChatCreateRequestDTO requestDTO){
         return Chat.builder()
-                .type(requestDTO.getType())
+                .chatName(requestDTO.getChatName())
+                .type(requestDTO.getParticipants().size()>2?"GROUP":"DIRECT")
                 .participants(requestDTO.getParticipants())
                 .build();
     }

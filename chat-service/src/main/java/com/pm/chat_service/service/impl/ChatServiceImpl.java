@@ -3,6 +3,7 @@ package com.pm.chat_service.service.impl;
 import com.pm.chat_service.dto.ChatCreateRequestDTO;
 import com.pm.chat_service.dto.ChatListResponseDTO;
 import com.pm.chat_service.model.Chat;
+import com.pm.chat_service.model.Participant;
 import com.pm.chat_service.repository.ChatParticipantRepository;
 import com.pm.chat_service.repository.ChatRepository;
 import com.pm.chat_service.service.ChatService;
@@ -12,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -46,12 +44,22 @@ public class ChatServiceImpl implements ChatService {
         List<ChatListResponseDTO> res=new ArrayList<>();
         participantRepository.findAllByUserId(userId)
                 .forEach((participantInfo)->{
-                    res.add(
-                            ChatListResponseDTO.builder()
-                                    .chatId(participantInfo.getChatId().toString())
-                                    .chatName(repository.getChatName(participantInfo.getChatId()))
-                                    .build()
-                    );
+                    Chat chat=repository.findById(participantInfo.getChatId()).orElse(null);
+                    Participant otherParticipant=new Participant();
+                    Map<String, String> participantMap=chat.getParticipants();
+                    participantMap.entrySet().stream().forEach((participant)->{
+                        if(!participant.getKey().equalsIgnoreCase(userId)){
+                            otherParticipant.setName(participant.getValue());
+                        }
+                    });
+                    if(chat!=null){
+                        res.add(
+                                ChatListResponseDTO.builder()
+                                        .chatId(participantInfo.getChatId().toString())
+                                        .chatName(chat.getType().equalsIgnoreCase("GROUP")?chat.getChatName():otherParticipant.getName())
+                                        .build()
+                        );
+                    }
                 });
         return res;
     }
@@ -65,10 +73,10 @@ public class ChatServiceImpl implements ChatService {
             repository.save(chat);
             log.info(chat.toString());
 
-            Arrays.stream(chat.getParticipants()).forEach(
+            chat.getParticipants().entrySet().forEach(
                     (participant) -> {
-                        log.info(participant);
-                        participantRepository.save(mapper.toParticipantModel(chat.getChatId().toString(), participant));
+                        log.info(participant.getKey());
+                        participantRepository.save(mapper.toParticipantModel(chat.getChatId().toString(), participant.getKey()));
                     }
             );
         }
