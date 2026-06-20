@@ -1,0 +1,100 @@
+<div class="" *ngIf="!isFormSubmitted">
+  <h1 class="">Personal Information</h1>
+  <div
+    class="form"
+    [ngStyle]="{
+      display: 'flex',
+      justifyContent: 'space-around',
+      border: 'solid',
+      borderWidth: '1px',
+      borderColor: 'black',
+      padding: '10px',
+    }"
+  >
+    <label for="">Name</label>
+    <input type="text" [(ngModel)]="user.name" />
+
+    <label for="">Email</label>
+    <input type="text" [(ngModel)]="user.email" />
+
+    <label for="">Phone</label>
+    <input type="text" [(ngModel)]="user.phone" />
+
+    <label for="">Address</label>
+    <input type="text" [(ngModel)]="user.address" />
+  </div>
+  <h1 class="">Qualifications</h1>
+  @for(qualification of this.user.qualifications; track $index){
+  <h3>Qualification {{ $index + 1 }}</h3>
+  <div
+    class="form"
+    [ngStyle]="{
+      display: 'flex',
+      justifyContent: 'space-around',
+      border: 'solid',
+      borderWidth: '1px',
+      borderColor: 'black',
+      padding: '10px',
+      marginBottom: '10px'
+    }"
+  >
+    <label for="">Degree</label>
+    <input type="text" [(ngModel)]="qualification.degree" />
+
+    <label for="">College/University</label>
+    <input type="text" [(ngModel)]="qualification.college" />
+
+    <label for="">Year of Graduation</label>
+    <input type="text" [(ngModel)]="qualification.year" />
+  </div>
+  }
+</div>
+
+<div class="" *ngIf="isFormSubmitted">
+  <h1>Form Submitted</h1>
+  <h2>Personal Information</h2>
+  <p>Name: {{ user.name }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>Phone: {{ user.phone }}</p>
+  <p>Address: {{ user.address }}</p>
+  <h2>Qualifications</h2>
+  @for(qualification of this.user.qualifications; track $index){
+  <div
+    class="form"
+    [ngStyle]="{
+      display: 'flex',
+      justifyContent: 'space-around',
+      border: 'solid',
+      borderWidth: '1px',
+      borderColor: 'black',
+      padding: '10px',
+      marginBottom: '10px'
+    }"
+  >
+    <p>Degree: {{ qualification.degree }}</p>
+    <p>College/University: {{ qualification.college }}</p>
+    <p>Year of Graduation: {{ qualification.year }}</p>
+  </div>
+  }
+</div>
+
+<div
+  class=""
+  *ngIf="!isFormSubmitted"
+  [ngStyle]="{ display: 'flex', justifyContent: 'space-around' }"
+>
+  <button (click)="addQualification()">Add Qualification</button>
+  <button class="" (click)="formSubmit()">Submit</button>
+</div>
+<div
+  class=""
+  *ngIf="isFormSubmitted"
+  [ngStyle]="{ display: 'flex', justifyContent: 'space-around' }"
+>
+  <button class="" (click)="back()">Back</button>
+  <button class="" (click)="edit()">Edit</button>
+</div>
+
+<div class="">
+  <h1>{{ inputValue1 | json }}</h1>
+</div>

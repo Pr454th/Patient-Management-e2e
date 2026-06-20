@@ -1,0 +1,155 @@
+<app-test [inputValue1]="inputValue1"></app-test>
+<button (click)="updateName()">Update Value</button>
+
+<div *ngIf="renderRoot">
+  <h1>Hello {{ getName() }}</h1>
+  {{ a + b }}
+  <h1>Property Binding</h1>
+  <input value="inputValue" disabled="{{ isDisabled }}" />
+  <input [value]="inputValue" [disabled]="isDisabled" />
+  {{ inputValue }}
+  <app-test></app-test>
+  <img [src]="imagePath" alt="" />
+  <br />
+  <h1>Event Binding</h1>
+  <button (click)="onClick()">Click Here!</button>
+  <br />
+  <div class="counter">
+    <h1>Counter Example</h1>
+    <button (click)="increment()">++</button>
+    <input [value]="counter" />
+    <button (dblclick)="decrement()">--</button>
+    <button (mouseenter)="decrement()">Hover Event</button>
+    <button (keypress)="decrement()">Drag Event</button>
+    <input (keydown)="keyDown($event)" />
+    <p>{{ isShift }}</p>
+    <input (focus)="focusEvent($event)" value="Focus Event" />
+  </div>
+
+  <div class="counter" (keypress)="onArrowClick($event)" tabindex="0">
+    <h1>COUNTER TREST WITH ARROW KEYS</h1>
+    <p>{{ counter }}</p>
+  </div>
+
+  <div class="twbinding">
+    <input [(ngModel)]="twoWayBindingValue" />
+    {{ twoWayBindingValue }}
+  </div>
+
+  <div class="cart">
+    <input type="number" [(ngModel)]="quantity" />
+    <p>Prive per item: {{ price }}</p>
+    <p>Total Price: {{ quantity * price }}</p>
+  </div>
+
+  <div *ngIf="isDark">Dark</div>
+  <div *ngIf="!isDark">Light</div>
+  <div *ngIf="5 > 0">Greater than zero</div>
+
+  <button (click)="showContent = !showContent">Show</button>
+  <div *ngIf="showContent">Click show to toggle</div>
+
+  <div class="div">
+    table creation with sample data
+    <button (click)="updateItem()">Update Item</button>
+    <table border="1">
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+      </tr>
+      <tr *ngFor="let user of users; index as i; trackBy: trackByFn">
+        <td>{{ i }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.age }}</td>
+      </tr>
+    </table>
+    @if(users.length>2){ @for (user of users; track $index) {
+    <tr>
+      <td>{{ user.age }}</td>
+      <td>{{ user.name }}</td>
+    </tr>
+    } @empty {
+    <p>No users found</p>
+    } } @else {
+    <p>Less than 2 users</p>
+    }
+  </div>
+
+  <button (click)="updateAge()">Update age</button>
+
+  <select [(ngModel)]="age">
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="30">30</option>
+    <option value="40">40</option>
+    <option value="50">50</option>
+  </select>
+
+  <div [ngSwitch]="age">
+    <p *ngSwitchCase="'10'">Age is 10.</p>
+    <p *ngSwitchCase="'20'">Age is 20.</p>
+    <p *ngSwitchCase="'30'">Age is 30.</p>
+    <p *ngSwitchCase="'40'">Age is 40.</p>
+    <p *ngSwitchCase="'50'">Age is 50.</p>
+    <p *ngSwitchDefault>Age is default.</p>
+  </div>
+
+  @switch (age) { @case ("10") {
+  <p>Age is 10</p>
+  } @case ("20") {
+  <p>Age is 20</p>
+  } @default {
+  <p>Age is default</p>
+  } }
+
+  <p [ngClass]="'updateStyles italic'">Hi, Yes</p>
+  <input type="text" (input)="setBackgroundColor($event)" [ngClass]="{ txt: hasColor }" />
+
+  <button (click)="toggleModes()">{{ enabled ? 'Dark Mode' : 'Light Mode' }}</button>
+  <!-- sample two 10line paragraphs -->
+  <p [ngClass]="{ darkMode: enabled }">
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas consequatur, cumque quisquam,
+    voluptate dicta, doloremque corporis voluptate dicta, doloremque corporis
+  </p>
+  <p [ngClass]="{ darkMode: enabled }">
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas consequatur, cumque quisquam,
+    voluptate dicta, doloremque corporis voluptate dicta, doloremque corporis
+  </p>
+
+  <h1 [ngStyle]="color">ng styling</h1>
+
+  <ng-container *ngFor="let user of users">
+    <h1>{{ user.age }}</h1>
+  </ng-container>
+
+  <ng-container *ngIf="authorized; else notAuthorized">
+    <h1>Authorized</h1>
+  </ng-container>
+
+  <ng-template #notAuthorized>
+    <h1>Not Authorized</h1>
+  </ng-template>
+
+  <input type="text" [(ngModel)]="username" />
+  <ng-container *ngIf="username; else entername"></ng-container>
+  <ng-template #entername>
+    <h1>Please enter username</h1>
+  </ng-template>
+
+  <ng-template #show let-msg1="showMessage">
+    {{ msg1 }}
+    <p>Displaying ng template without using condition</p>
+  </ng-template>
+
+  <ng-container *ngTemplateOutlet="show; context: { showMessage: 'Red color' }"></ng-container>
+
+  <ng-template #show1 let-data>
+    @for(color of data; track $index){
+    <h2>
+      {{ color }}
+    </h2>
+    }
+  </ng-template>
+
+  <ng-container *ngTemplateOutlet="show1; context: { $implicit: ['red', 'blue'] }"></ng-container>
+</div>

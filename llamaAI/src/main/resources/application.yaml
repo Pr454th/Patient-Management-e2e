@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: llamaAI
+  mongodb:
+      uri: ${URI}
+  datasource:
+    url: jdbc:h2:file:~/chatmemory;AUTO_SERVER=true
+    driver-class-name: org.h2.Driver
+    username: red
+    password: blue
+  ai:
+    chat:
+      client:
+        enabled: false
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+            schema: classpath:/Schema/schema=h2.sql
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: tinyllama
+      embedding:
+        model: nomic-embed-text
+    vectorstore:
+      mongodb:
+#        initialize-schema: true
+        collection-name: vector_store
+logging:
+  level:
+    org:
+      springframework:
+        ai:
+          chat:
+            client:
+              advisor: DEBUG
+server:
+  port: 8000
+
+tavily:
+  api:
+    key: ${TAVILY_API_KEY}
+  url: ${TAVILY_BASE_URL}
+  result_size: 5
