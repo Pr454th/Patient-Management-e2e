@@ -25,6 +25,4 @@ public class ChatMemoryController {
                         )
                 .user(message).call().content());
     }
-
-//    RED
 }
